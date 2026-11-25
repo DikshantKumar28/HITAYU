@@ -4,7 +4,7 @@ import { Menu, X, ArrowRight, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { LotusEmblem } from './IndianMotifs';
 
-export default function Navbar() {
+export default function Navbar({ onOurApproachClick }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
@@ -21,6 +21,18 @@ export default function Navbar() {
     { label: 'YogaAI', to: '/yoga-ai' },
     { label: 'Ayurveda', to: '/knowledge' },
   ];
+
+  const handleNavClick = (e, link) => {
+    if (link.label === 'Our Approach') {
+      if (onOurApproachClick) {
+        e.preventDefault();
+        onOurApproachClick();
+      } else if (location.pathname !== '/') {
+        // Navigating from another route to homepage approach
+        navigate('/#approach');
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[#F8F6EF]/90 backdrop-blur-md border-b border-[#E4E9E2]">
@@ -49,6 +61,7 @@ export default function Navbar() {
             <Link
               key={link.label}
               to={link.to}
+              onClick={(e) => handleNavClick(e, link)}
               className={`text-sm font-medium transition-colors ${
                 location.pathname === link.to
                   ? 'text-[#173F35] font-semibold'
@@ -115,7 +128,10 @@ export default function Navbar() {
             <Link
               key={link.label}
               to={link.to}
-              onClick={() => setMobileOpen(false)}
+              onClick={(e) => {
+                handleNavClick(e, link);
+                setMobileOpen(false);
+              }}
               className="block py-2 text-base font-medium text-[#26352F] hover:text-[#173F35]"
             >
               {link.label}

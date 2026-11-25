@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -10,8 +10,10 @@ import {
   Compass,
   BookOpen,
   Activity,
+  Sparkles,
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import OurApproachExperience from '../components/approach/OurApproachExperience';
 import {
   LotusEmblem,
   MandalaWatermark,
@@ -20,6 +22,26 @@ import {
 } from '../components/IndianMotifs';
 
 export default function LandingPage() {
+  const [showOurApproach, setShowOurApproach] = useState(false);
+
+  useEffect(() => {
+    const checkHash = () => {
+      if (window.location.hash === '#approach') {
+        setShowOurApproach(true);
+      }
+    };
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => window.removeEventListener('hashchange', checkHash);
+  }, []);
+
+  const handleCloseOurApproach = () => {
+    setShowOurApproach(false);
+    if (window.location.hash === '#approach') {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  };
+
   const fadeUp = {
     initial: { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
@@ -29,7 +51,13 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F6EF] text-[#26352F] flex flex-col">
-      <Navbar />
+      <Navbar onOurApproachClick={() => setShowOurApproach(true)} />
+
+      {/* Cinematic Our Approach Experience Overlay */}
+      <OurApproachExperience
+        isOpen={showOurApproach}
+        onClose={handleCloseOurApproach}
+      />
 
       {/* HERO SECTION */}
       <section className="relative overflow-hidden bg-[#0E2620] pt-16 pb-24 lg:pt-24 lg:pb-32 min-h-[660px] flex items-center">
@@ -117,6 +145,17 @@ export default function LandingPage() {
               “स्वस्थस्य स्वास्थ्य रक्षणम्” — Preserving the vitality of the healthy through
               understanding, personalization, and daily practice.
             </p>
+
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => setShowOurApproach(true)}
+                className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full border border-[#C6A15B]/60 bg-gradient-to-r from-[#173F35] to-[#102E28] text-[#E6D5A8] text-xs font-semibold tracking-widest uppercase hover:brightness-110 shadow-md hover:border-[#C6A15B] transition-all group"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#C6A15B]" />
+                <span>Launch Cinematic Brand Story</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#C6A15B] group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
