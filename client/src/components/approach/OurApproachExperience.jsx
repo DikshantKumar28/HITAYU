@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, ArrowUp } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
+import Navbar from '../Navbar';
 import CinematicIntro from './CinematicIntro';
 import HitayuBrandReveal from './HitayuBrandReveal';
 import WhatIsHitayu from './WhatIsHitayu';
@@ -9,7 +10,6 @@ import TheNeedForHitayu from './TheNeedForHitayu';
 import OurApproachFeatures from './OurApproachFeatures';
 import HitayuPhilosophy from './HitayuPhilosophy';
 import ExploreHitayuCta from './ExploreHitayuCta';
-import { LotusEmblem } from '../IndianMotifs';
 
 /**
  * OurApproachExperience Orchestrator
@@ -101,48 +101,17 @@ export default function OurApproachExperience({ isOpen, onClose }) {
             transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
             className="relative min-h-screen"
           >
-            {/* Luxury Sticky Top Navigation */}
-            <header className="sticky top-0 z-40 w-full bg-[#F8F5EC]/90 backdrop-blur-md border-b border-[#C6A15B]/30 transition-all">
-              <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-[#173F35] text-[#E6D5A8] border border-[#C6A15B]/40 flex items-center justify-center">
-                    <LotusEmblem className="w-5 h-5" color="#E6D5A8" />
-                  </div>
-                  <div>
-                    <span className="font-serif text-sm font-bold tracking-widest text-[#173F35] uppercase">
-                      HITAYU 2.0
-                    </span>
-                    <span className="text-[10px] tracking-widest uppercase text-[#B58A3C] block -mt-0.5">
-                      Our Approach Experience
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  {/* Replay Video Intro Button */}
-                  <button
-                    onClick={() => {
-                      setPhase('video');
-                      const container = document.getElementById('our-approach-scroll-container');
-                      if (container) container.scrollTop = 0;
-                    }}
-                    className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#173F35] hover:text-[#B58A3C] transition-colors"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#C6A15B]" />
-                    <span>Replay Intro</span>
-                  </button>
-
-                  {/* Close / Return to Site Button */}
-                  <button
-                    onClick={handleClose}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#C6A15B]/50 bg-white/80 hover:bg-[#173F35] hover:text-[#F8F5EC] text-[#173F35] text-xs font-semibold tracking-wider uppercase shadow-sm transition-all group"
-                  >
-                    <span>Return to Site</span>
-                    <X className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform" />
-                  </button>
-                </div>
-              </div>
-            </header>
+            {/* Full Site Navbar on Our Approach Page */}
+            <Navbar
+              activeNav="Our Approach"
+              onHomeClick={handleClose}
+              onOurApproachClick={() => {
+                const container = document.getElementById('our-approach-scroll-container');
+                if (container) {
+                  container.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+            />
 
             {/* SCENES SEQUENCE */}
             <main>

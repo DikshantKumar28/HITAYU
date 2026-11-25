@@ -4,7 +4,7 @@ import { Menu, X, ArrowRight, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { LotusEmblem } from './IndianMotifs';
 
-export default function Navbar({ onOurApproachClick }) {
+export default function Navbar({ onOurApproachClick, onHomeClick, activeNav }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
@@ -23,7 +23,12 @@ export default function Navbar({ onOurApproachClick }) {
   ];
 
   const handleNavClick = (e, link) => {
-    if (link.label === 'Our Approach') {
+    if (link.label === 'Home') {
+      if (onHomeClick) {
+        e.preventDefault();
+        onHomeClick();
+      }
+    } else if (link.label === 'Our Approach') {
       if (onOurApproachClick) {
         e.preventDefault();
         onOurApproachClick();
@@ -38,7 +43,16 @@ export default function Navbar({ onOurApproachClick }) {
     <header className="sticky top-0 z-40 w-full bg-[#F8F6EF]/90 backdrop-blur-md border-b border-[#E4E9E2]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
+        <Link
+          to="/"
+          onClick={(e) => {
+            if (onHomeClick) {
+              e.preventDefault();
+              onHomeClick();
+            }
+          }}
+          className="flex items-center gap-3 group"
+        >
           <div className="w-11 h-11 rounded-2xl bg-[#173F35] flex items-center justify-center text-[#F8F6EF] group-hover:bg-[#102E28] transition-colors shadow-sm border border-[#C6A56B]/30">
             <LotusEmblem className="w-6 h-6" />
           </div>
@@ -57,20 +71,23 @@ export default function Navbar({ onOurApproachClick }) {
 
         {/* Desktop Links */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={(e) => handleNavClick(e, link)}
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === link.to
-                  ? 'text-[#173F35] font-semibold'
-                  : 'text-[#26352F]/80 hover:text-[#173F35]'
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeNav ? activeNav === link.label : (location.pathname === link.to);
+            return (
+              <Link
+                key={link.label}
+                to={link.to}
+                onClick={(e) => handleNavClick(e, link)}
+                className={`text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'text-[#173F35] font-semibold'
+                    : 'text-[#26352F]/80 hover:text-[#173F35]'
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Desktop Actions */}
@@ -124,19 +141,26 @@ export default function Navbar({ onOurApproachClick }) {
       {/* Mobile Dropdown */}
       {mobileOpen && (
         <div className="md:hidden bg-[#F8F6EF] border-b border-[#E4E9E2] px-4 py-4 space-y-3">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              onClick={(e) => {
-                handleNavClick(e, link);
-                setMobileOpen(false);
-              }}
-              className="block py-2 text-base font-medium text-[#26352F] hover:text-[#173F35]"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeNav ? activeNav === link.label : (location.pathname === link.to);
+            return (
+              <Link
+                key={link.label}
+                to={link.to}
+                onClick={(e) => {
+                  handleNavClick(e, link);
+                  setMobileOpen(false);
+                }}
+                className={`block py-2 text-base font-medium transition-colors ${
+                  isActive
+                    ? 'text-[#173F35] font-semibold'
+                    : 'text-[#26352F] hover:text-[#173F35]'
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
           <div className="pt-3 border-t border-[#E4E9E2] flex flex-col gap-2">
             {isAuthenticated ? (
               <>
